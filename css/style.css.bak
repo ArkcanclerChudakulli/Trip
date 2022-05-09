@@ -1,0 +1,104 @@
+.font {
+	font-family: Arial;
+}
+
+.nopadding {
+	padding: 0 !important;
+}
+
+.padding_10 {
+	padding: 10px !important;
+}
+
+#settings:hover {
+	cursor: pointer;
+	opacity: 0.5;
+}
+
+#road{
+	height: 100vh;
+	width: 100vw;
+	background:url("../img/road/morning.jpg");
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+}
+
+/* 900 / 1100 */
+#mirror{
+	height: 150px;
+	width: 900px;
+	background:url("../img/mirror.png");
+	background-repeat: no-repeat;
+	background-size: 100% 100%;
+}
+
+#mirror_txt {
+    padding: 15px 50px;
+	font-size: 30px;
+}
+
+.blue{
+	color: blue;
+}
+
+.green{
+	color: green;
+}
+
+.red{
+	color: red;
+}
+
+.skill{
+	background-color: rgba(255, 255, 255, 0.8);
+	font-size: 30px;
+}
+.next{
+	font-size: 20px;
+}
+.skill_num{
+	color: red;
+}
+.next_num{
+	color: blue;
+}
+.font_30{
+	font-size: 30px;
+}
+.font_80{
+	font-size: 50px;
+}
+.white_50{
+	background-color: rgba(255, 255, 255, 0.5);
+}
+.white_80{
+	background-color: rgba(255, 255, 255, 0.8);
+}
+
+.white{
+	background-color: white;
+}
+.black{
+	background-color: black;
+}
+.action_cursor{
+	cursor: pointer;
+}
+.kalender{
+	font-family: serif;
+    font-weight: bold;
+    color: crimson;
+}
+
+.loto_win{
+	color: 			 green;
+	text-decoration: line-through
+}
+
+.blink {
+    animation: blink 0.5s infinite; /* Параметры анимации */
+   }
+   @keyframes blink {
+    from { opacity: 1; /* Непрозрачный текст */ }
+    to { opacity: 0; /* Прозрачный текст */ }
+   }

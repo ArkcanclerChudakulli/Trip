@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="css/bootstrap.min.css" rel="stylesheet" ></script>
+<link href="css/style.css" rel="stylesheet" ></script>
+<script src="js/car_2.js"></script>
+<script src="save.js"></script>
+<script src="js/jquery-3.6.0.min.js"></script>
+</head>
+<body onload='load()'>
+
+<div id="road">
+
+	<button id="start" type="button" class="btn btn-success btn-lg btn-block" onclick="move()">Поехали!</button>
+
+	<div id="game" class="col-md-2 nopadding">
+		<img src="img/game.jpg" width="253px" height="253px"/>
+		<div class='skill'>
+			<img src="img/speed.gif" width="80px" height="80px"/>
+			<span class="text-center">
+				<span id='speed' class='skill_num'>45</span> км/ч
+			</span>
+		</div>
+		<div class='skill'>
+			<img id="benzin_img" src="img/benzin_green.png" width="70px" height="70px"/>
+			<span class="text-center">
+				<span id='benzin' class='skill_num'>200</span> / <span id='tank'>200</span> л
+			</span>
+		</div>
+		<div class='skill'>
+			<img src="img/purse.png" width="80px" height="80px"/>
+			<span class="text-center">
+				<span id='money' class='green'>10 000</span> руб
+			</span>
+		</div>
+		<div class='skill'>
+			<img src="img/karma.png" width="80px" height="80px"/>
+			<span class="text-center">
+				Карма: <span id='karma' class='skill_num'>0</span>
+			</span>
+		</div>
+		<div class='padding_10'>
+			<img id="settings" src="img/settings.jpg" width="50px" height="50px" onclick="settings()">
+			<button id="newGame" type="button" class="btn btn-primary btn-lg" onclick="newGame()" style="display:none">New</button>
+			<button id="saveGame" type="button" class="btn btn-primary btn-lg" onclick="saveGame() " style="display:none">Save</button>
+		</div>
+	</div>
+	
+	<div class="col-md-7">
+		<div id="mirror">
+		 <marquee id="mirror_txt" class="font text-center align-middle" direction="up" scrolldelay="1" 
+			scrollamount="15" behavior="slide">
+				<font id="road_text">Итак, большое путешествие из Петербурга в Китай начинается. Вы садитесь в ваш автомобиль и, улыбнувшись, давите на газ!</font>
+			</marquee>
+		</div>
+		<!-- 900 notebook || 1100 monitor -->
+		<video id="car" width="900" autoplay loop muted playsinline src="video/rout/1.Sankt-Peterburg.mp4" style="display:none"></video>
+		<video id="rout" width="900" autoplay muted playsinline src="video/rout.mp4"></video>
+		<video id="quest" width="900" autoplay loop muted playsinline src="video/quest/money.mp4" style="display:none"></video>
+		<!-- 431/287 notebook || 531/337 monitor -->
+		<img id="action_1" class="action_cursor" src="img/quest/pumpkin.jpg" width="431" height="287" style="display:none" onclick="quest()"/>
+		<img id="action_2" class="action_cursor" src="img/postel.jpg" width="431" height="287" style="display:none" onclick="postel()"/>
+		<img id="event" class="action_cursor" src="img/dozapravka.jpg" width="880px" height="500px" style="display:none" onclick="dozapravka()"/>
+		<img id="discount" class="action_cursor" src="img/karma/karma_5.jpg" width="800px" height="500px" style="display:none"/>
+		<table id="loto" class="table table-bordered white font_80 text-center action_cursor" style="display:none" onclick="roll_loto()">
+		  <tbody>
+			<tr>
+			  <td class="black"></td>
+			  <td id='loto_3'>3</td>
+			  <td id='loto_6'>6</td>
+			  <td id='loto_9'>9</td>
+			  <td class="black"></td>
+			  <td id='loto_14'>14</td>
+			</tr>
+			<tr>
+			  <td id='loto_1'>1</td>
+			  <td id='loto_4'>4</td>
+			  <td class="black"></td>
+			  <td id='loto_10'>10</td>
+			  <td id='loto_12'>12</td>
+			  <td class="black"></td>
+			</tr>
+			<tr>
+			  <td class="black"></td>
+			  <td id='loto_5'>5</td>
+			  <td id='loto_7'>7</td>
+			  <td id='loto_11'>11</td>
+			  <td class="black"></td>
+			  <td id='loto_15'>15</td>
+			</tr>
+			<tr>
+			  <td id='loto_2'>2</td>
+			  <td class="black"></td>
+			  <td id='loto_8'>8</td>
+			  <td class="black"></td>
+			  <td id='loto_13'>13</td>
+			  <td class="black"></td>
+			</tr>
+		  </tbody>
+		</table>
+	</div>
+	
+	<div id="town" class="col-sm-3 text-center">
+		<div class='font_30 white_50'>
+			<span class="text-center">
+				<span id='km' class='skill_num'>11 948</span> км до Пекина<br/>
+				<span class="next">
+				  (Далее: <span id='next_km' class='next_num'>28</span> км = <span id='next_l' class='next_num'>4</span> л)
+				</span>
+			</span>
+		</div>
+		<h1 id="town_title" class="font white_50">Санкт-Петербург</h1>
+		<img id="emblem" src="img/town/spb.png" width="200px" height="200px"/>
+		<h2 id="region" class="font white_80">Северная Столица</h1>
+		<div class="text-center font_80 white_80 kalender">
+			<img id="kalender" src="img/kalender.png" width="120px" height="80px"/>			
+			День <span id='day'>1</span>		
+		</div>
+		<div class="text-center font_80 white_80">
+			<img id="sun" src="img/sun.png" width="80px" height="80px"/>
+			<span id='hour'>9</span>
+			<span class='blink'>:</span>
+			<span id='minute'>30</span>
+			<img id="clock_emblem" src="img/clock.png" width="80px" height="80px"/>
+		</div>
+	</div>
+
+</div>
+	
+</body>
+</html>

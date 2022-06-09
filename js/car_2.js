@@ -1,4 +1,4 @@
-let save;
+let save = false;
 let testMode = false;
 let currentLocation = 0; //42
 
@@ -28,14 +28,6 @@ let kmToPekin = 12278;
 let tank = 200;
 let creditLimit = -20000;
 
-let loto_count = 0;
-let win_count = 0;
-let loto_tickets = 5;
-let loto_tickets_max = 5;
-
-const loto_wins = [];
-const loto_rolls = [];
-
 let currentSong = 0;
 let currentQuest = 0;
 let rashodBenzina = 0.15;
@@ -43,55 +35,41 @@ let rashodLitrov = 1;
 let currentHour = 0;
 let currentMinute = 0;
 let currentKM = 28;
+let distanceMultiplier = 1;
+let destination = null;
+
+let loto_count = 0;
+let win_count = 0;
+let loto_tickets = 5;
+let loto_tickets_max = 5;
+
+let loto_wins = [];
+let loto_rolls = [];
+let loto_wins_str = '';
+let loto_rolls_str = '';
 let hourInterval = null;
 let minuteInterval = null;
 let benzinUsing = null;
-let destination = null;
-let distanceMultiplier = 1;
 
 function load(){
 	shuffle(songs);
 	shuffle(quests);
-	load_loto();
-	$('#speed').html(speed);
-	$('#benzin').html(currentBenzin);
-	checkMoney(money);
-	$('#karma').html(karma);
-	$('#date').html(date);
-	$('#hour').html(hour);
-	$('#minute').html(minute);
-	$('#km').html(kmToPekin);
-	if(save){
-		day = save_day;
-		date = save_date;
-		$('#day').html(date);
-		hour = save_hour;
-		$('#hour').html(hour);
-		minute = save_minute;
-		 if(minute >= 10){
-			$('#minute').html(minute);
-	   } else {
-			$('#minute').html("0" + minute);
-	   }
-		speed = save_speed;
-		$('#speed').html(speed);
-		benzinPrice = save_benzinPrice;
-		kmToPekin = save_kmToPekin;
-		$('#km').html(save_kmToPekin);
-		$('#next_km').html(save_nextKM);
-		$('#next_l').html(save_nextL);
-		tank = save_tank;
-		$('#tank').html(tank);
-		currentLocation = save_currentLocation;
-		$('#town_title').html(locations[currentLocation].title);
-		$("#emblem").attr("src", locations[currentLocation].emblem);
-		$('#region').html(locations[currentLocation].region);
-		currentBenzin = save_currentBenzin;
-		$('#benzin').html(currentBenzin);
-		money = save_money;
+	if(localStorage.getItem('save') === 'true'){
+		$('#rout').hide();
+		loadFromStorage();
+		adjustLocation();
+		mirror('Вы сейчас находитесь в локации: ' + locations[currentLocation].title + '. Хотите продолжить путь?');
+	} else {
+		mirror('Итак, большое путешествие из Петербурга в Китай начинается. Вы садитесь в ваш автомобиль и, улыбнувшись, давите на газ!');
+		load_loto();
 		checkMoney(money);
-		karma = save_karma;
+		$('#speed').html(speed);
+		$('#benzin').html(currentBenzin);
 		$('#karma').html(karma);
+		$('#date').html(date);
+		$('#hour').html(hour);
+		$('#minute').html(minute);
+		$('#km').html(kmToPekin);
 	}
 }
 
@@ -114,26 +92,113 @@ function salut(){
 
 function settings(){
 	$('#newGame').toggle();
-	$('#saveGame').toggle();
+	/* $('#saveGame').toggle(); */
 }
 
 function newGame()
 {
-	window.alert('Выберите файл save.js, перезапишите его и обновите страницу браузера, чтобы вернуться в Санкт-Петербург.');
-    location.href = "data:application/octet-stream;charset=UTF-8,";
+	localStorage.clear();
+	window.location.reload();
 }
 
 function saveGame()
 {
-	window.alert('Выберите файл save.js и перезапишите его, чтобы сохранить игру.');
-	let data = 'save=true;let%20save_day=' + day + ';let%20save_date=' + date + ';let%20save_hour=' + hour
-				+ ';let%20save_minute=' + minute + ';let%20save_speed=' + speed + ';let%20save_benzinPrice=' + benzinPrice
-				+ ';let%20save_kmToPekin=' + kmToPekin + ';let%20save_nextKM=' + locations[currentLocation+1].km
-				+ ';let%20save_nextL=' + Math.floor(locations[currentLocation+1].km* rashodBenzina)
-				+ ';let%20save_tank=' + tank + ';let%20save_currentLocation=' + currentLocation + ';let%20save_currentBenzin=' + currentBenzin
-				+ ';let%20save_money=' + money + ';let%20save_karma=' + karma;
-	location.href = "data:application/octet-stream;charset=UTF-8," + data;
-} 
+	localStorage.setItem('save', 'true');
+	localStorage.setItem('currentLocation', currentLocation);
+	localStorage.setItem('speed', speed);
+	localStorage.setItem('currentBenzin', currentBenzin);
+	localStorage.setItem('money', money);
+	localStorage.setItem('karma', karma);
+	localStorage.setItem('day', day);
+	localStorage.setItem('date', date);
+	localStorage.setItem('hour', hour);
+	localStorage.setItem('minute', minute);
+	localStorage.setItem('isGameOver', isGameOver);
+	localStorage.setItem('hint', hint);
+	localStorage.setItem('originalBenzinPrice', originalBenzinPrice);
+	localStorage.setItem('originalUpgradePrice', originalUpgradePrice);
+	localStorage.setItem('originalFoodPrice', originalFoodPrice);
+	localStorage.setItem('benzinPrice', benzinPrice);
+	localStorage.setItem('benzinOverallCost', benzinOverallCost);
+	localStorage.setItem('foodPrice', foodPrice);
+	localStorage.setItem('upgradePrice', upgradePrice);
+	localStorage.setItem('karmaDiscount', karmaDiscount);
+	localStorage.setItem('karmaLevel', karmaLevel);
+	localStorage.setItem('karmaNextLevel', karmaNextLevel);
+	localStorage.setItem('kmToPekin', kmToPekin);
+	localStorage.setItem('tank', tank);
+	localStorage.setItem('creditLimit', creditLimit);
+	localStorage.setItem('currentSong', currentSong);
+	localStorage.setItem('currentQuest', currentQuest);
+	localStorage.setItem('rashodBenzina', rashodBenzina);
+	localStorage.setItem('currentHour', currentHour);
+	localStorage.setItem('currentMinute', currentMinute);
+	localStorage.setItem('currentKM', currentKM);
+	localStorage.setItem('distanceMultiplier', distanceMultiplier);
+	localStorage.setItem('destination', destination);
+	localStorage.setItem('loto_count', loto_count);
+	localStorage.setItem('win_count', win_count);
+	localStorage.setItem('loto_tickets', loto_tickets);
+	localStorage.setItem('loto_tickets_max', loto_tickets_max);
+	localStorage.setItem('loto_wins_str', loto_wins.join(' '));
+	localStorage.setItem('loto_rolls_str', loto_rolls.join(' '));
+}
+
+function loadFromStorage()
+{
+	save = true;
+	rashodLitrov = Math.floor(currentKM * rashodBenzina);
+	currentLocation = parseInt(localStorage.getItem('currentLocation'));
+	speed = parseInt(localStorage.getItem('speed'));
+	$('#speed').html(speed);
+	currentBenzin = parseInt(localStorage.getItem('currentBenzin'));
+	checkBenzin();
+	$('#benzin').html(currentBenzin);
+	money = parseInt(localStorage.getItem('money'));
+	checkMoney();
+	$('#money').html(money);
+	karma = parseInt(localStorage.getItem('karma'));
+	$('#karma').html(karma);
+	kmToPekin = parseInt(localStorage.getItem('kmToPekin'));
+	$('#km').html(kmToPekin);
+	currentKM = parseInt(localStorage.getItem('currentKM'));
+	rashodBenzina = parseFloat(localStorage.getItem('rashodBenzina'));
+	tank = parseInt(localStorage.getItem('tank'));
+	$('#tank').html(tank);
+	day = localStorage.getItem('day') === 'true';
+	date = parseInt(localStorage.getItem('date'));
+	$('#day').html(date);
+	hour = parseInt(localStorage.getItem('hour'));
+	$('#hour').html(hour);
+	minute = parseInt(localStorage.getItem('minute'));
+	$('#minute').html(minute);
+	isGameOver = localStorage.getItem('isGameOver') === 'true';
+	hint = parseInt(localStorage.getItem('hint'));
+	originalBenzinPrice = parseInt(localStorage.getItem('originalBenzinPrice'));
+	originalUpgradePrice = parseInt(localStorage.getItem('originalUpgradePrice'));
+	originalFoodPrice = parseInt(localStorage.getItem('originalFoodPrice'));
+	benzinPrice = parseInt(localStorage.getItem('benzinPrice'));
+	benzinOverallCost = parseInt(localStorage.getItem('benzinOverallCost'));
+	foodPrice = parseInt(localStorage.getItem('foodPrice'));
+	upgradePrice = parseInt(localStorage.getItem('upgradePrice'));
+	karmaDiscount = parseInt(localStorage.getItem('karmaDiscount'));
+	karmaLevel = parseInt(localStorage.getItem('karmaLevel'));
+	karmaNextLevel = parseInt(localStorage.getItem('karmaNextLevel'));
+	creditLimit = parseInt(localStorage.getItem('creditLimit'));
+	currentSong = parseInt(localStorage.getItem('currentSong'));
+	currentQuest = parseInt(localStorage.getItem('currentQuest'));
+	currentHour = parseInt(localStorage.getItem('currentHour'));
+	currentMinute = parseInt(localStorage.getItem('currentMinute'));
+	distanceMultiplier = parseInt(localStorage.getItem('distanceMultiplier'));
+	destination = parseInt(localStorage.getItem('destination'));
+	loto_count = parseInt(localStorage.getItem('loto_count'));
+	win_count = parseInt(localStorage.getItem('win_count'));
+	loto_tickets = parseInt(localStorage.getItem('loto_tickets'));
+	loto_tickets_max = parseInt(localStorage.getItem('loto_tickets_max'));
+	loto_wins = localStorage.getItem('loto_wins_str').split(' ');
+	loto_rolls = localStorage.getItem('loto_rolls_str').split(' ');
+	load_loto_from_storage();
+}
 
 function load_loto(){
 	let random;
@@ -149,11 +214,19 @@ function load_loto(){
 	}
 }
 
+function load_loto_from_storage(){
+	for(let i = 1; i <= 15; i++){
+		$('#loto_' + i).html(loto_wins[i-1]);
+	}
+	//Mark green the winning numbers
+	loto_wins.filter(value => loto_rolls.includes(value)).forEach(windex => $('#loto_' + (loto_wins.indexOf(windex)+1)).addClass('loto_win'));
+}
+
 function roll_loto(){
 	if(loto_tickets == 0){
 		mirror('Извините, лотерейные билеты закончились. Попробуйте заехать в киоск Авто-Лото в другом городе!', 20, 'red');
 		$('#loto').prop('disabled', true);
-	} else {	
+	} else {
 		loto_tickets--;
 		money -= 49;
 		checkMoney(money);
@@ -170,10 +243,11 @@ function roll_loto(){
 			$('#loto_' + (loto_wins.indexOf(num)+1)).addClass('loto_win');
 		}
 	}
+	saveGame();
 }
 
 function clean_loto(){
-	loto_tickets = loto_tickets_max;
+	loto_tickets = loto_tickets_max + (karmaLevel/5) * 2;
 	$('#loto').hide();
 	$('#loto').prop('disabled', false);
 }
@@ -251,13 +325,20 @@ function arrive(){
 
 function arriveText(){
 	if(currentLocation<locations.length-1 && !isGameOver){
-	$('#next_km').html(locations[currentLocation+1].km);
-	$('#next_l').html(Math.floor(locations[currentLocation+1].km* rashodBenzina));
-	$('#town_title').html(locations[currentLocation].title);
-	$("#emblem").attr("src", locations[currentLocation].emblem);
-	$('#region').html(locations[currentLocation].region);
-	$('#start').prop('disabled', true);
-	deliver();
+		adjustLocation();
+		$('#start').prop('disabled', true);
+		deliver();
+	}
+}
+
+function adjustLocation(){
+	if(currentLocation<locations.length-1 && !isGameOver){
+		$('#next_km').html(locations[currentLocation+1].km);
+		$('#next_l').html(Math.floor(locations[currentLocation+1].km*rashodBenzina));
+		$('#town_title').html(locations[currentLocation].title);
+		$("#emblem").attr("src", locations[currentLocation].emblem);
+		$('#region').html(locations[currentLocation].region);
+		$("#car").attr("src", "video/rout/" + locations[currentLocation].video + ".mp4");
 	}
 }
 
@@ -463,7 +544,6 @@ function checkKarma(){
 		benzinPrice = Math.floor(originalBenzinPrice - (originalBenzinPrice * karmaDiscount/100));
 		upgradePrice = Math.floor(originalUpgradePrice - (originalUpgradePrice * karmaDiscount/100));
 		foodPrice = Math.floor(originalFoodPrice - (originalFoodPrice * karmaDiscount/100));
-		loto_tickets_max+=karma/5;
 		$('#discount').attr("src", "img/karma/karma_" + karmaLevel + ".jpg");
 		$('#discount').show();
 	}
@@ -473,6 +553,7 @@ function playQuestSong(song){
 	let name = "audio/quest/" + song + ".mp3";
 	let action = function() {
 		$('#quest').hide();
+		saveGame();
 		$('#start').prop('disabled', false);
 	};
 	playAudio(name,action);
@@ -491,9 +572,8 @@ function nextQuest(){
 	if(currentQuest >= quests.length-1){
 		shuffle(quests);
 		if(destination != null){
-			while(findIndexByKeyValue(quests,"questMethod","postel")<=destination){
-				shuffle(quests);
-			}
+			//Push "postel" to end of quests
+			quests.push(quests.splice(findIndexByKeyValue(quests,"questMethod","postel"), 1)[0]);
 		}
 		currentQuest = 0;
 	}
@@ -511,6 +591,7 @@ function findIndexByKeyValue(array, key, value) {
 function endActivity(){
 	$('#action_1').hide();
 	$('#action_2').hide();
+	saveGame();
 	$('#start').prop('disabled', false);
 }
 

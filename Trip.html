@@ -14,7 +14,7 @@
 	<button id="start" type="button" class="btn btn-success btn-lg btn-block" onclick="move()">Поехали!</button>
 
 	<div id="game" class="col-md-2 nopadding">
-		<img src="img/game.jpg" width="253px" height="253px"/>
+		<img src="img/game.jpg" width="250px" height="250px"/>
 		<div class='skill'>
 			<img src="img/speed.gif" width="80px" height="80px"/>
 			<span class="text-center">
@@ -39,8 +39,8 @@
 				Карма: <span id='karma' class='skill_num'>0</span>
 			</span>
 		</div>
-		<div class='padding_10' style="display:none">
-			<img id="settings" src="img/settings.jpg" style="display:none" width="50px" height="50px" onclick="settings()">
+		<div class='padding_10'>
+			<img id="settings" src="img/settings.jpg" width="50px" height="50px" onclick="settings()">
 			<button id="newGame" type="button" class="btn btn-primary btn-lg" onclick="newGame()" style="display:none">New</button>
 			<button id="saveGame" type="button" class="btn btn-primary btn-lg" onclick="saveGame() " style="display:none">Save</button>
 		</div>
@@ -50,7 +50,7 @@
 		<div id="mirror">
 		 <marquee id="mirror_txt" class="font text-center align-middle" direction="up" scrolldelay="1" 
 			scrollamount="15" behavior="slide">
-				<font id="road_text">Итак, большое путешествие из Петербурга в Китай начинается. Вы садитесь в ваш автомобиль и, улыбнувшись, давите на газ!</font>
+				<font id="road_text"></font>
 			</marquee>
 		</div>
 		<!-- 900 notebook || 1100 monitor -->
@@ -103,7 +103,7 @@
 	<div id="town" class="col-sm-3 text-center">
 		<div class='font_30 white_50'>
 			<span class="text-center">
-				<span id='km' class='skill_num'>11 948</span> км до Пекина<br/>
+				<span id='km' class='skill_num'>12278</span> км до Пекина<br/>
 				<span class="next">
 				  (Далее: <span id='next_km' class='next_num'>28</span> км = <span id='next_l' class='next_num'>4</span> л)
 				</span>

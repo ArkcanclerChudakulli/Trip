@@ -506,7 +506,6 @@ function quest(add){
 		let plusKarma = getRandomInt(1,3);
 		txt+=plusKarma;
 		karma+=plusKarma;
-		checkKarma();
 		$('#karma').html(karma);
 	} else {
 		if(quests[currentQuest].antikarma){
@@ -553,6 +552,7 @@ function playQuestSong(song){
 	let name = "audio/quest/" + song + ".mp3";
 	let action = function() {
 		$('#quest').hide();
+		checkKarma();
 		saveGame();
 		$('#start').prop('disabled', false);
 	};

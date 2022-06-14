@@ -671,22 +671,24 @@ function countHour(){
 }
 
 function nextDate(){
-	var dayCost = "За прошедшие сутки на питание ушло " + foodPrice + " руб.";
-	hour = 0;
-	$('#day').html(++date);
-	money -= foodPrice;
-	if(money<0){
-		money -= 500;
-		dayCost += " Из-за отрицательного баланса на счету сняты проценты по кредиту: 500 руб."
+	if(!currentLocation>=locations.length-1){
+		var dayCost = "За прошедшие сутки на питание ушло " + foodPrice + " руб.";
+		hour = 0;
+		$('#day').html(++date);
+		money -= foodPrice;
+		if(money<0){
+			money -= 500;
+			dayCost += " Из-за отрицательного баланса на счету сняты проценты по кредиту: 500 руб."
+		}
+		if(currentBenzin <= 0){
+			dayCost += baryga();
+		}
+		if(money<creditLimit){
+			dayCost = gameover();
+		}
+		checkMoney(money);
+		mirror(dayCost, 20, 'red');
 	}
-	if(currentBenzin <= 0){
-		dayCost += baryga();
-	}
-	if(money<creditLimit){
-		dayCost = gameover();
-	}
-	checkMoney(money);
-	mirror(dayCost, 20, 'red');
 }
 
 function gameover(){

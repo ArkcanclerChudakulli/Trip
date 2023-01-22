@@ -671,7 +671,7 @@ function countHour(){
 }
 
 function nextDate(){
-	if(!currentLocation>=locations.length-1){
+	if(!(currentLocation>=locations.length-1)){
 		var dayCost = "За прошедшие сутки на питание ушло " + foodPrice + " руб.";
 		hour = 0;
 		$('#day').html(++date);
@@ -706,10 +706,10 @@ function countMinute(){
 	if(currentMinute > 0) {
 	   currentMinute--;
 	   minute++;
-	   if(minute == 60){
+	   if(minute >= 60){
 		 minute = 0;
 		 hour++;
-		  if(hour == 24){
+		  if(hour >= 24){
 			 nextDate();
 		   }
 		 $('#hour').html(hour);

@@ -660,7 +660,7 @@ function countHour(){
 	if(currentHour > 0) {
 	   currentHour--;
 	   hour++;
-	   if(hour == 24){
+	   if(hour >= 24){
 		 nextDate();
 	   }
 	   $('#hour').html(hour);
